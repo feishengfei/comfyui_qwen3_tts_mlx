@@ -13,4 +13,4 @@ __version__ = "0.0.1"
 from .src.comfyui_qwen3_tts_mlx.nodes import NODE_CLASS_MAPPINGS
 from .src.comfyui_qwen3_tts_mlx.nodes import NODE_DISPLAY_NAME_MAPPINGS
 
-
+print("### Loading: Qwen3TTS TTS MLX Nodes ###")
