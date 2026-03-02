@@ -37,6 +37,25 @@ class Qwen3TTSMLXLoader:
 # 🔹 TTS 生成节点
 # =========================
 
+OPTION_SETTINGS = {
+    "lang_code": (["auto", "english", "chinese", "japanese", "korean", "french", "german", "spanish", "portuguese", "russian", ], {"default": "auto"}),
+    "play"    : ("BOOLEAN", {"default": False}),
+    "verbose" : ("BOOLEAN", {"default": True}),
+    "speed": ("FLOAT", {
+            "default": 1.0,
+            "min": 0.5,
+            "max": 2.0,
+            "step": 0.1
+        }),
+    "temperature": ("FLOAT", {
+            "default": 0.7,
+            "min": 0.1,
+            "max": 1.0,
+            "step": 0.1
+        }),
+    "stream"  : ("BOOLEAN", {"default": False}),
+}
+
 class Qwen3TTSBaseMLXGenerate:
 
     @classmethod
@@ -49,7 +68,8 @@ class Qwen3TTSBaseMLXGenerate:
                 "ref_text": ("STRING", {"default": ""}),
                 "output_dir": ("STRING", {"default": "tts_output"}),
                 "file_prefix": ("STRING", {"default": "tts"}),
-            }
+            },
+            "optional": OPTION_SETTINGS
         }
 
     RETURN_TYPES = ("STRING",)
@@ -67,6 +87,13 @@ class Qwen3TTSBaseMLXGenerate:
         ref_text,
         output_dir,
         file_prefix,
+
+        speed,
+        lang_code,
+        play,
+        verbose,
+        stream,
+        temperature,
     ):
         os.makedirs(output_dir, exist_ok=True)
 
@@ -78,6 +105,13 @@ class Qwen3TTSBaseMLXGenerate:
             ref_text=ref_text,
             file_prefix=file_prefix,
             output_path=output_dir,
+
+            speed = speed,
+            lang_code = lang_code,
+            play=play,
+            verbose=verbose,
+            stream=stream,
+            temperature=temperature,
         )
 
         return (output_dir,)
@@ -91,9 +125,11 @@ class Qwen3TTSCustomVoiceMLXGenerate:
                 "model": ("QWEN3_TTS_MODEL",),
                 "text": ("STRING", {"multiline": True}),
                 "voice": (["serena", "vivian", "uncle_fu", "ryan", "aiden", "ono_anna", "sohee", "eric", "dylan"], {"default": "vivian"}),
+                'instruct' : ("STRING", {"multiline": True}, {"default": ""}),
                 "output_dir": ("STRING", {"default": "tts_output"}),
                 "file_prefix": ("STRING", {"default": "tts"}),
-            }
+            },
+            "optional": OPTION_SETTINGS
         }
 
     RETURN_TYPES = ("STRING",)
@@ -110,6 +146,15 @@ class Qwen3TTSCustomVoiceMLXGenerate:
         voice,
         output_dir,
         file_prefix,
+
+        instruct,
+
+        speed,
+        lang_code,
+        play,
+        verbose,
+        stream,
+        temperature,
     ):
         os.makedirs(output_dir, exist_ok=True)
 
@@ -120,6 +165,15 @@ class Qwen3TTSCustomVoiceMLXGenerate:
             voice=voice,
             file_prefix=file_prefix,
             output_path=output_dir,
+
+            instruct=instruct,
+
+            speed=speed,
+            lang_code=lang_code,
+            play=play,
+            verbose=verbose,
+            stream=stream,
+            temperature=temperature,
         )
 
         return (output_dir,)
@@ -135,7 +189,8 @@ class Qwen3TTSVoiceDesignMLXGenerate:
                 "instruct": ("STRING", {"multiline": True}, {"default": "A cheerful young female voice with high pitch"}),
                 "output_dir": ("STRING", {"default": "tts_output"}),
                 "file_prefix": ("STRING", {"default": "tts"}),
-            }
+            },
+            "optional": OPTION_SETTINGS
         }
 
     RETURN_TYPES = ("STRING",)
@@ -152,6 +207,13 @@ class Qwen3TTSVoiceDesignMLXGenerate:
         instruct,
         output_dir,
         file_prefix,
+         
+        speed,
+        lang_code,
+        play,
+        verbose,
+        stream,
+        temperature,
     ):
         os.makedirs(output_dir, exist_ok=True)
 
@@ -162,6 +224,13 @@ class Qwen3TTSVoiceDesignMLXGenerate:
             instruct=instruct,
             file_prefix=file_prefix,
             output_path=output_dir,
+
+            speed=speed,
+            lang_code=lang_code,
+            play=play,
+            verbose=verbose,
+            stream=stream,
+            temperature=temperature,
         )
 
         return (output_dir,)
