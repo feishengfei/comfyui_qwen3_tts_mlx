@@ -1,16 +1,14 @@
 import os
+from pathlib import Path
 from inspect import cleandoc
-
 from mlx_audio.tts.generate import generate_audio
 from mlx_audio.tts.utils import load_model
 
 # =========================
 # 🔹 模型加载节点（带缓存）
 # =========================
-
 class Qwen3TTSMLXLoader:
     _model_cache = {}
-
     @classmethod
     def INPUT_TYPES(cls):
         return {
@@ -18,24 +16,17 @@ class Qwen3TTSMLXLoader:
                 "model_dir": ("STRING", {"default": "/path/to/your/qwen3tts-folder"}),
             }
         }
-
     RETURN_TYPES = ("QWEN3_TTS_MODEL",)
     RETURN_NAMES = ("model",)
     FUNCTION = "load_model_node"
     CATEGORY = "Qwen3-TTS-MLX"
-
     def load_model_node(self, model_dir):
         if model_dir in self._model_cache:
             return (self._model_cache[model_dir],)
-
         model = load_model(model_dir)
         self._model_cache[model_dir] = model
         return (model,)
 
-
-# =========================
-# 🔹 TTS 生成节点
-# =========================
 
 OPTION_SETTINGS = {
     "lang_code": (["auto", "english", "chinese", "japanese", "korean", "french", "german", "spanish", "portuguese", "russian", ], {"default": "auto"}),
@@ -56,8 +47,10 @@ OPTION_SETTINGS = {
     "stream"  : ("BOOLEAN", {"default": False}),
 }
 
+# =========================
+# 🔹 TTS Base 生成节点
+# =========================
 class Qwen3TTSBaseMLXGenerate:
-
     @classmethod
     def INPUT_TYPES(cls):
         return {
@@ -71,14 +64,11 @@ class Qwen3TTSBaseMLXGenerate:
             },
             "optional": OPTION_SETTINGS
         }
-
-    RETURN_TYPES = ("STRING",)
-    RETURN_NAMES = ("output_path",)
+    RETURN_TYPES = ("STRING", "STRING")
+    RETURN_NAMES = ("output_path", "output_parent_dir")
     FUNCTION = "generate_node"
     CATEGORY = "Qwen3-TTS-MLX"
-
     OUTPUT_NODE = True
-
     def generate_node(
         self,
         model,
@@ -87,7 +77,6 @@ class Qwen3TTSBaseMLXGenerate:
         ref_text,
         output_dir,
         file_prefix,
-
         speed,
         lang_code,
         play,
@@ -96,8 +85,6 @@ class Qwen3TTSBaseMLXGenerate:
         temperature,
     ):
         os.makedirs(output_dir, exist_ok=True)
-
-        # 调用生成
         generate_audio(
             model=model,
             text=text,
@@ -105,7 +92,6 @@ class Qwen3TTSBaseMLXGenerate:
             ref_text=ref_text,
             file_prefix=file_prefix,
             output_path=output_dir,
-
             speed = speed,
             lang_code = lang_code,
             play=play,
@@ -113,11 +99,15 @@ class Qwen3TTSBaseMLXGenerate:
             stream=stream,
             temperature=temperature,
         )
+        abs_output_dir = str(Path(output_dir).absolute())
+        abs_parent_dir = str(Path(output_dir).absolute().parent)
+        return (abs_output_dir, abs_parent_dir)
 
-        return (output_dir,)
 
+# =========================
+# 🔹 TTS CustomVoice 生成节点
+# =========================
 class Qwen3TTSCustomVoiceMLXGenerate:
-
     @classmethod
     def INPUT_TYPES(cls):
         return {
@@ -125,20 +115,17 @@ class Qwen3TTSCustomVoiceMLXGenerate:
                 "model": ("QWEN3_TTS_MODEL",),
                 "text": ("STRING", {"multiline": True}),
                 "voice": (["serena", "vivian", "uncle_fu", "ryan", "aiden", "ono_anna", "sohee", "eric", "dylan"], {"default": "vivian"}),
-                'instruct' : ("STRING", {"multiline": True}, {"default": ""}),
+                'instruct' : ("STRING", {"multiline": True, "default": ""}),
                 "output_dir": ("STRING", {"default": "tts_output"}),
                 "file_prefix": ("STRING", {"default": "tts"}),
             },
             "optional": OPTION_SETTINGS
         }
-
-    RETURN_TYPES = ("STRING",)
-    RETURN_NAMES = ("output_path",)
+    RETURN_TYPES = ("STRING", "STRING")
+    RETURN_NAMES = ("output_path", "output_parent_dir")
     FUNCTION = "generate_node"
     CATEGORY = "Qwen3-TTS-MLX"
-
     OUTPUT_NODE = True
-
     def generate_node(
         self,
         model,
@@ -146,9 +133,7 @@ class Qwen3TTSCustomVoiceMLXGenerate:
         voice,
         output_dir,
         file_prefix,
-
         instruct,
-
         speed,
         lang_code,
         play,
@@ -157,17 +142,13 @@ class Qwen3TTSCustomVoiceMLXGenerate:
         temperature,
     ):
         os.makedirs(output_dir, exist_ok=True)
-
-        # 调用生成
         generate_audio(
             model=model,
             text=text,
             voice=voice,
             file_prefix=file_prefix,
             output_path=output_dir,
-
             instruct=instruct,
-
             speed=speed,
             lang_code=lang_code,
             play=play,
@@ -175,31 +156,32 @@ class Qwen3TTSCustomVoiceMLXGenerate:
             stream=stream,
             temperature=temperature,
         )
+        abs_output_dir = str(Path(output_dir).absolute())
+        abs_parent_dir = str(Path(output_dir).absolute().parent)
+        return (abs_output_dir, abs_parent_dir)
 
-        return (output_dir,)
 
+# =========================
+# 🔹 TTS VoiceDesign 生成节点
+# =========================
 class Qwen3TTSVoiceDesignMLXGenerate:
-
     @classmethod
     def INPUT_TYPES(cls):
         return {
             "required": {
                 "model": ("QWEN3_TTS_MODEL",),
                 "text": ("STRING", {"multiline": True}),
-                "instruct": ("STRING", {"multiline": True}, {"default": "A cheerful young female voice with high pitch"}),
+                "instruct": ("STRING", {"multiline": True, "default": "A cheerful young female voice with high pitch"}),
                 "output_dir": ("STRING", {"default": "tts_output"}),
                 "file_prefix": ("STRING", {"default": "tts"}),
             },
             "optional": OPTION_SETTINGS
         }
-
-    RETURN_TYPES = ("STRING",)
-    RETURN_NAMES = ("output_path",)
+    RETURN_TYPES = ("STRING", "STRING")
+    RETURN_NAMES = ("output_path", "output_parent_dir")
     FUNCTION = "generate_node"
     CATEGORY = "Qwen3-TTS-MLX"
-
     OUTPUT_NODE = True
-
     def generate_node(
         self,
         model,
@@ -207,7 +189,6 @@ class Qwen3TTSVoiceDesignMLXGenerate:
         instruct,
         output_dir,
         file_prefix,
-         
         speed,
         lang_code,
         play,
@@ -216,15 +197,12 @@ class Qwen3TTSVoiceDesignMLXGenerate:
         temperature,
     ):
         os.makedirs(output_dir, exist_ok=True)
-
-        # 调用生成
         generate_audio(
             model=model,
             text=text,
             instruct=instruct,
             file_prefix=file_prefix,
             output_path=output_dir,
-
             speed=speed,
             lang_code=lang_code,
             play=play,
@@ -232,14 +210,14 @@ class Qwen3TTSVoiceDesignMLXGenerate:
             stream=stream,
             temperature=temperature,
         )
-
-        return (output_dir,)
+        abs_output_dir = str(Path(output_dir).absolute())
+        abs_parent_dir = str(Path(output_dir).absolute().parent)
+        return (abs_output_dir, abs_parent_dir)
 
 
 # =========================
 # 🔹 注册
 # =========================
-
 NODE_CLASS_MAPPINGS = {
     "Qwen3TTSMLXLoader": Qwen3TTSMLXLoader,
     "Qwen3TTSBaseMLXGenerate": Qwen3TTSBaseMLXGenerate,
@@ -251,5 +229,5 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "Qwen3TTSMLXLoader": "Qwen3 TTS MLX Loader",
     "Qwen3TTSBaseMLXGenerate": "Qwen3 TTS MLX Generate Base",
     "Qwen3TTSCustomVoiceMLXGenerate": "Qwen3 TTS MLX Generate CustomVoice (9 speakers)",
-    "Qwen3TTSVoiceDesignMLXGenerate": "Qwen3 TTS MLX Generate VoicdeDesign (by instruct)",
+    "Qwen3TTSVoiceDesignMLXGenerate": "Qwen3 TTS MLX Generate VoiceDesign (by instruct)",
 }
