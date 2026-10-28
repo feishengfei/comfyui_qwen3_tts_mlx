@@ -45,7 +45,13 @@ OPTION_SETTINGS = {
             "step": 0.1
         }),
     "stream"  : ("BOOLEAN", {"default": False}),
+    # 新增：join_audio 透传给底层generate_audio
+    "join_audio": ("BOOLEAN", {
+        "default": False,
+        "tooltip": "False：按换行切分，输出 prefix_000.wav、prefix_001.wav…多分片，适合单词卡，对接批量ASR；True：拼接全部片段输出单个完整wav，适合故事连续朗读"
+    }),
 }
+
 
 # =========================
 # 🔹 TTS Base 生成节点
@@ -83,6 +89,7 @@ class Qwen3TTSBaseMLXGenerate:
         verbose,
         stream,
         temperature,
+        join_audio,
     ):
         os.makedirs(output_dir, exist_ok=True)
         generate_audio(
@@ -98,6 +105,7 @@ class Qwen3TTSBaseMLXGenerate:
             verbose=verbose,
             stream=stream,
             temperature=temperature,
+            join_audio=join_audio,
         )
         abs_output_dir = str(Path(output_dir).absolute())
         abs_parent_dir = str(Path(output_dir).absolute().parent)
@@ -140,6 +148,7 @@ class Qwen3TTSCustomVoiceMLXGenerate:
         verbose,
         stream,
         temperature,
+        join_audio,
     ):
         os.makedirs(output_dir, exist_ok=True)
         generate_audio(
@@ -155,6 +164,7 @@ class Qwen3TTSCustomVoiceMLXGenerate:
             verbose=verbose,
             stream=stream,
             temperature=temperature,
+            join_audio=join_audio,
         )
         abs_output_dir = str(Path(output_dir).absolute())
         abs_parent_dir = str(Path(output_dir).absolute().parent)
@@ -195,6 +205,7 @@ class Qwen3TTSVoiceDesignMLXGenerate:
         verbose,
         stream,
         temperature,
+        join_audio,
     ):
         os.makedirs(output_dir, exist_ok=True)
         generate_audio(
@@ -209,6 +220,7 @@ class Qwen3TTSVoiceDesignMLXGenerate:
             verbose=verbose,
             stream=stream,
             temperature=temperature,
+            join_audio=join_audio,
         )
         abs_output_dir = str(Path(output_dir).absolute())
         abs_parent_dir = str(Path(output_dir).absolute().parent)
@@ -224,7 +236,6 @@ NODE_CLASS_MAPPINGS = {
     "Qwen3TTSCustomVoiceMLXGenerate": Qwen3TTSCustomVoiceMLXGenerate,
     "Qwen3TTSVoiceDesignMLXGenerate": Qwen3TTSVoiceDesignMLXGenerate,
 }
-
 NODE_DISPLAY_NAME_MAPPINGS = {
     "Qwen3TTSMLXLoader": "Qwen3 TTS MLX Loader",
     "Qwen3TTSBaseMLXGenerate": "Qwen3 TTS MLX Generate Base",
