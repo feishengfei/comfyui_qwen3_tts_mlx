@@ -244,6 +244,22 @@ class YamlParse:
         data = yaml.safe_load(yaml_str)
         return (data,)
 
+class YamlParseRaw:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "yaml_str": ("STRING", {"multiline": True}),
+            }
+        }
+    RETURN_TYPES = ("ANY",)
+    RETURN_NAMES = ("data",)
+    FUNCTION = "parse"
+    CATEGORY = "Qwen3-TTS-MLX/Utils"
+    def parse(self, yaml_str):
+        data = yaml.safe_load(yaml_str)
+        return (data,)
+
 
 class DictGet:
     @classmethod
@@ -264,6 +280,51 @@ class DictGet:
             return (default,)
         return (dict_obj.get(key, default),)
 
+class ListGet:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "list_data": ("ANY",),
+                "index": ("INT", {"default":0, "min":-10000}),
+            },
+            "optional": {
+                "default": ("ANY",),
+            }
+        }
+    RETURN_TYPES = ("ANY",)
+    RETURN_NAMES = ("item",)
+    FUNCTION = "get_item"
+    CATEGORY = "Qwen3-TTS-MLX/Utils"
+
+    def get_item(self, list_data, index, default=None):
+        if not isinstance(list_data, list):
+            print(f'felix not isinstance:{list}')
+            return (default,)
+        try:
+            return (list_data[index],)
+        except (IndexError, TypeError):
+            return (default,)
+
+
+class GetListLength:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "list_data": ("ANY",),
+            }
+        }
+    RETURN_TYPES = ("INT",)
+    RETURN_NAMES = ("length",)
+    FUNCTION = "get_len"
+    CATEGORY = "Qwen3-TTS-MLX/Utils"
+
+    def get_len(self, list_data):
+        if not isinstance(list_data, list):
+            return (0,)
+        return (len(list_data),)
+
 
 # =========================
 # 🔹 注册
@@ -274,7 +335,10 @@ NODE_CLASS_MAPPINGS = {
     "Qwen3TTSCustomVoiceMLXGenerate": Qwen3TTSCustomVoiceMLXGenerate,
     "Qwen3TTSVoiceDesignMLXGenerate": Qwen3TTSVoiceDesignMLXGenerate,
     "YamlParse": YamlParse,
+    "YamlParseRaw": YamlParseRaw,
     "DictGet": DictGet,
+    "ListGet": ListGet,
+    "GetListLength": GetListLength,
 }
 NODE_DISPLAY_NAME_MAPPINGS = {
     "Qwen3TTSMLXLoader": "Qwen3 TTS MLX Loader",
@@ -282,5 +346,8 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "Qwen3TTSCustomVoiceMLXGenerate": "Qwen3 TTS MLX Generate CustomVoice (9 speakers)",
     "Qwen3TTSVoiceDesignMLXGenerate": "Qwen3 TTS MLX Generate VoiceDesign (by instruct)",
     "YamlParse": "YAML Parse",
+    "YamlParseRaw": "YAML Parse Raw(不展开Batch)",
     "DictGet": "Dict Get",
+    "ListGet": "List Get",
+    "GetListLength": "Get List Length",
 }
