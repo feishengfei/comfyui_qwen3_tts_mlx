@@ -1,4 +1,5 @@
 import os
+import yaml
 from pathlib import Path
 from inspect import cleandoc
 from mlx_audio.tts.generate import generate_audio
@@ -226,6 +227,43 @@ class Qwen3TTSVoiceDesignMLXGenerate:
         abs_parent_dir = str(Path(output_dir).absolute().parent)
         return (abs_output_dir, abs_parent_dir)
 
+class YamlParse:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "yaml_str": ("STRING", {"multiline": True}),
+            }
+        }
+    RETURN_TYPES = ("ANY",)
+    RETURN_NAMES = ("data",)
+    OUTPUT_IS_LIST = (True,)
+    FUNCTION = "parse"
+    CATEGORY = "Qwen3-TTS-MLX/Utils"
+    def parse(self, yaml_str):
+        data = yaml.safe_load(yaml_str)
+        return (data,)
+
+
+class DictGet:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "dict_obj": ("ANY",),
+                "key": ("STRING", {"default": "en_GB"}),
+                "default": ("STRING", {"default": ""}),
+            }
+        }
+    RETURN_TYPES = ("STRING",)
+    RETURN_NAMES = ("value",)
+    FUNCTION = "get"
+    CATEGORY = "Qwen3-TTS-MLX/Utils"
+    def get(self, dict_obj, key, default):
+        if not isinstance(dict_obj, dict):
+            return (default,)
+        return (dict_obj.get(key, default),)
+
 
 # =========================
 # 🔹 注册
@@ -235,10 +273,14 @@ NODE_CLASS_MAPPINGS = {
     "Qwen3TTSBaseMLXGenerate": Qwen3TTSBaseMLXGenerate,
     "Qwen3TTSCustomVoiceMLXGenerate": Qwen3TTSCustomVoiceMLXGenerate,
     "Qwen3TTSVoiceDesignMLXGenerate": Qwen3TTSVoiceDesignMLXGenerate,
+    "YamlParse": YamlParse,
+    "DictGet": DictGet,
 }
 NODE_DISPLAY_NAME_MAPPINGS = {
     "Qwen3TTSMLXLoader": "Qwen3 TTS MLX Loader",
     "Qwen3TTSBaseMLXGenerate": "Qwen3 TTS MLX Generate Base",
     "Qwen3TTSCustomVoiceMLXGenerate": "Qwen3 TTS MLX Generate CustomVoice (9 speakers)",
     "Qwen3TTSVoiceDesignMLXGenerate": "Qwen3 TTS MLX Generate VoiceDesign (by instruct)",
+    "YamlParse": "YAML Parse",
+    "DictGet": "Dict Get",
 }
