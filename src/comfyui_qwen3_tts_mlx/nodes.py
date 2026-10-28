@@ -4,7 +4,6 @@ from pathlib import Path
 from inspect import cleandoc
 from mlx_audio.tts.generate import generate_audio
 from mlx_audio.tts.utils import load_model
-
 # =========================
 # 🔹 模型加载节点（带缓存）
 # =========================
@@ -28,7 +27,6 @@ class Qwen3TTSMLXLoader:
         self._model_cache[model_dir] = model
         return (model,)
 
-
 OPTION_SETTINGS = {
     "lang_code": ("STRING", {"default": "auto"}),
     "play"    : ("BOOLEAN", {"default": False}),
@@ -51,8 +49,9 @@ OPTION_SETTINGS = {
         "default": False,
         "tooltip": "False：按换行切分，输出 prefix_000.wav、prefix_001.wav…多分片，适合单词卡，对接批量ASR；True：拼接全部片段输出单个完整wav，适合故事连续朗读"
     }),
+    # 新增trigger：仅用于DAG执行依赖，业务逻辑不消费此参数
+    "trigger": ("*", {"default": None, "tooltip":"仅做执行依赖接线，不参与生成逻辑，接上游节点输出实现串行排队"}),
 }
-
 
 # =========================
 # 🔹 TTS Base 生成节点
@@ -91,6 +90,7 @@ class Qwen3TTSBaseMLXGenerate:
         stream,
         temperature,
         join_audio,
+        trigger=None,
     ):
         os.makedirs(output_dir, exist_ok=True)
         generate_audio(
@@ -111,7 +111,6 @@ class Qwen3TTSBaseMLXGenerate:
         abs_output_dir = str(Path(output_dir).absolute())
         abs_parent_dir = str(Path(output_dir).absolute().parent)
         return (abs_output_dir, abs_parent_dir)
-
 
 # =========================
 # 🔹 TTS CustomVoice 生成节点
@@ -150,6 +149,7 @@ class Qwen3TTSCustomVoiceMLXGenerate:
         stream,
         temperature,
         join_audio,
+        trigger=None,
     ):
         os.makedirs(output_dir, exist_ok=True)
         generate_audio(
@@ -170,7 +170,6 @@ class Qwen3TTSCustomVoiceMLXGenerate:
         abs_output_dir = str(Path(output_dir).absolute())
         abs_parent_dir = str(Path(output_dir).absolute().parent)
         return (abs_output_dir, abs_parent_dir)
-
 
 # =========================
 # 🔹 TTS VoiceDesign 生成节点
@@ -207,6 +206,7 @@ class Qwen3TTSVoiceDesignMLXGenerate:
         stream,
         temperature,
         join_audio,
+        trigger=None,
     ):
         os.makedirs(output_dir, exist_ok=True)
         generate_audio(
@@ -260,7 +260,6 @@ class YamlParseRaw:
         data = yaml.safe_load(yaml_str)
         return (data,)
 
-
 class DictGet:
     @classmethod
     def INPUT_TYPES(cls):
@@ -296,7 +295,6 @@ class ListGet:
     RETURN_NAMES = ("item",)
     FUNCTION = "get_item"
     CATEGORY = "Qwen3-TTS-MLX/Utils"
-
     def get_item(self, list_data, index, default=None):
         if not isinstance(list_data, list):
             print(f'felix not isinstance:{list}')
@@ -305,7 +303,6 @@ class ListGet:
             return (list_data[index],)
         except (IndexError, TypeError):
             return (default,)
-
 
 class GetListLength:
     @classmethod
@@ -319,12 +316,10 @@ class GetListLength:
     RETURN_NAMES = ("length",)
     FUNCTION = "get_len"
     CATEGORY = "Qwen3-TTS-MLX/Utils"
-
     def get_len(self, list_data):
         if not isinstance(list_data, list):
             return (0,)
         return (len(list_data),)
-
 
 # =========================
 # 🔹 注册
@@ -340,6 +335,7 @@ NODE_CLASS_MAPPINGS = {
     "ListGet": ListGet,
     "GetListLength": GetListLength,
 }
+
 NODE_DISPLAY_NAME_MAPPINGS = {
     "Qwen3TTSMLXLoader": "Qwen3 TTS MLX Loader",
     "Qwen3TTSBaseMLXGenerate": "Qwen3 TTS MLX Generate Base",
