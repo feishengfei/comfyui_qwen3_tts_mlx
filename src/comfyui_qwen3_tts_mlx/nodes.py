@@ -227,23 +227,6 @@ class Qwen3TTSVoiceDesignMLXGenerate:
         abs_parent_dir = str(Path(output_dir).absolute().parent)
         return (abs_output_dir, abs_parent_dir)
 
-class YamlParse:
-    @classmethod
-    def INPUT_TYPES(cls):
-        return {
-            "required": {
-                "yaml_str": ("STRING", {"multiline": True}),
-            }
-        }
-    RETURN_TYPES = ("ANY",)
-    RETURN_NAMES = ("data",)
-    OUTPUT_IS_LIST = (True,)
-    FUNCTION = "parse"
-    CATEGORY = "Qwen3-TTS-MLX/Utils"
-    def parse(self, yaml_str):
-        data = yaml.safe_load(yaml_str)
-        return (data,)
-
 class YamlParseRaw:
     @classmethod
     def INPUT_TYPES(cls):
@@ -329,7 +312,6 @@ NODE_CLASS_MAPPINGS = {
     "Qwen3TTSBaseMLXGenerate": Qwen3TTSBaseMLXGenerate,
     "Qwen3TTSCustomVoiceMLXGenerate": Qwen3TTSCustomVoiceMLXGenerate,
     "Qwen3TTSVoiceDesignMLXGenerate": Qwen3TTSVoiceDesignMLXGenerate,
-    "YamlParse": YamlParse,
     "YamlParseRaw": YamlParseRaw,
     "DictGet": DictGet,
     "ListGet": ListGet,
@@ -341,7 +323,6 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "Qwen3TTSBaseMLXGenerate": "Qwen3 TTS MLX Generate Base",
     "Qwen3TTSCustomVoiceMLXGenerate": "Qwen3 TTS MLX Generate CustomVoice (9 speakers)",
     "Qwen3TTSVoiceDesignMLXGenerate": "Qwen3 TTS MLX Generate VoiceDesign (by instruct)",
-    "YamlParse": "YAML Parse",
     "YamlParseRaw": "YAML Parse Raw(不展开Batch)",
     "DictGet": "Dict Get",
     "ListGet": "List Get",
