@@ -30,7 +30,7 @@ class Qwen3TTSMLXLoader:
 
 
 OPTION_SETTINGS = {
-    "lang_code": (["auto", "english", "chinese", "japanese", "korean", "french", "german", "spanish", "portuguese", "russian", ], {"default": "auto"}),
+    "lang_code": ("STRING", {"default": "auto"}),
     "play"    : ("BOOLEAN", {"default": False}),
     "verbose" : ("BOOLEAN", {"default": True}),
     "speed": ("FLOAT", {
