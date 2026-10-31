@@ -409,7 +409,7 @@ class Qwen3TTSBaseMLXDialogGenerate:
         # filter unused keys from global OPTION_SETTINGS
         filtered_opts = {
             k: v for k, v in OPTION_SETTINGS.items()
-            if k not in {"join_audio", "file_prefix", "output_dir", "lang_code"}
+            if k not in {"join_audio", "file_prefix",  "lang_code"}
         }
         return {
             "required": {
@@ -493,6 +493,7 @@ class Qwen3TTSBaseMLXDialogGenerate:
                     lang_code=speaker_cfg["lang_code"],
                     output_path=str(tmp_dir),
                     file_prefix=f"seg_{idx}",
+                    join_audio=True, # 强制！禁止底层按换行拆分、禁止追加_000后缀
                     **kwargs
                 )
                 concat_list.append(seg_path)
