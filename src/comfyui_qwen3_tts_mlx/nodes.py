@@ -409,7 +409,7 @@ class Qwen3TTSBaseMLXDialogGenerate:
         # filter unused keys from global OPTION_SETTINGS
         filtered_opts = {
             k: v for k, v in OPTION_SETTINGS.items()
-            if k not in {"join_audio", "file_prefix", "output_dir"}
+            if k not in {"join_audio", "file_prefix", "output_dir", "lang_code"}
         }
         return {
             "required": {
