@@ -33,7 +33,7 @@ class Qwen3TTSMLXLoader:
 
 OPTION_SETTINGS = {
     "lang_code": ("STRING", {"default": "auto"}),
-    "play"    : ("BOOLEAN", {"default": False}),
+    "play"    : ("BOOLEAN", {"default": False, "tooltip": "对于dialog或连续生成的场合，需要关闭play选项" }),
     "verbose" : ("BOOLEAN", {"default": True}),
     "speed": ("FLOAT", {
             "default": 1.0,
@@ -409,7 +409,7 @@ class Qwen3TTSBaseMLXDialogGenerate:
         # filter unused keys from global OPTION_SETTINGS
         filtered_opts = {
             k: v for k, v in OPTION_SETTINGS.items()
-            if k not in {"join_audio", "file_prefix",  "lang_code"}
+            if k not in {"join_audio", "file_prefix",  "lang_code", "play"}
         }
         return {
             "required": {
