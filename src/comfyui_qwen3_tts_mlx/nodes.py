@@ -443,6 +443,8 @@ class Qwen3TTSBaseMLXDialogGenerate:
         out_dir = Path(output_dir)
         out_dir.mkdir(parents=True, exist_ok=True)
         final_wav = out_dir / f"{file_prefix}.wav"
+        # 新增：确保final_wav所在的父目录存在（会自动创建audio这类子层级）file_prefix = "audio/_g_0_a"
+        final_wav.parent.mkdir(parents=True, exist_ok=True)
         tmp_dir = out_dir / ".tmp_dialog_audio"
         tmp_dir.mkdir(exist_ok=True)
         try:
