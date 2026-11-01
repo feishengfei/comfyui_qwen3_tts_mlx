@@ -18,13 +18,16 @@ class Qwen3TTSMLXLoader:
         return {
             "required": {
                 "model_dir": ("STRING", {"default": "/path/to/your/qwen3tts-folder"}),
+            },
+            "optional": {
+                "trigger": ("*", {}),
             }
         }
     RETURN_TYPES = ("QWEN3_TTS_MODEL",)
     RETURN_NAMES = ("model",)
     FUNCTION = "load_model_node"
     CATEGORY = "Qwen3-TTS-MLX"
-    def load_model_node(self, model_dir):
+    def load_model_node(self, model_dir, **kwargs):
         if model_dir in self._model_cache:
             return (self._model_cache[model_dir],)
         model = load_model(model_dir)
