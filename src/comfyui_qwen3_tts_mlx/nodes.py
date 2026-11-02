@@ -530,6 +530,104 @@ class Qwen3TTSBaseMLXDialogGenerate:
             except Exception:
                 pass
 
+class SpeakerCastYamlParse:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "yaml_text": ("STRING", {"multiline": True, "tooltip": "Speaker‑Cast YAML数组，遵循speakercastitem.md；顶层直接数组"}),
+            },
+            "optional": {
+                "trigger": ("*", {"tooltip": "时序触发，等待上游完成再解析"}),
+                "global_speed": ("FLOAT", {
+                    "default": 1.0,
+                    "min": 0.5,
+                    "max": 2.0,
+                    "step": 0.1,
+                    "tooltip": "角色未指定speed时使用此全局值"
+                }),
+                "global_temperature": ("FLOAT", {
+                    "default": 0.7,
+                    "min": 0.1,
+                    "max": 1.0,
+                    "step": 0.1,
+                    "tooltip": "角色未指定temperature时使用此全局值"
+                }),
+            }
+        }
+
+    RETURN_TYPES = ("SPEAKER_CAST_ITEM", "STRING", "STRING")
+    RETURN_NAMES = ("speaker_item", "name_list_csv", "name_to_fullname_and_note_dict_str")
+    OUTPUT_IS_LIST = (True,False,False)
+    FUNCTION = "execute"
+    CATEGORY = "Qwen3‑TTS‑MLX/SpeakerCast"
+    DESCRIPTION = "解析Speaker‑Cast YAML角色数组，输出SPEAKER_CAST_ITEM元组列表，配合SpeakerCastUnzip使用; 同时输出逗号分隔的角色name列表字符串,以及name到(fullname, note)字典对应的字符串"
+
+    def execute(self, yaml_text: str, global_speed: float, global_temperature: float, trigger=None):
+        if not yaml_text or not yaml_text.strip():
+            return ([],)
+
+        data = yaml.safe_load(yaml_text)
+        if not isinstance(data, list):
+            raise ValueError("SpeakerCastYamlParse: YAML顶层必须为数组(list)")
+
+        seen_names = set()
+        result_list = []
+        name_to_fullname_and_note_dict = {}
+
+        for item in data:
+            if not isinstance(item, dict):
+                raise ValueError(f"SpeakerCastYamlParse: 数组项必须为dict，得到 {type(item)}")
+
+            # 必填字段校验
+            for req_key in ("name", "lang_code", "instruct"):
+                if req_key not in item:
+                    raise ValueError(f"SpeakerCastYamlParse: 角色缺失必填字段 '{req_key}'")
+
+            sp_name = item["name"]
+            if sp_name in seen_names:
+                raise ValueError(f"SpeakerCastYamlParse: 检测到重复name: '{sp_name}'，name必须全局唯一")
+            seen_names.add(sp_name)
+
+            # 读取角色自身参数，缺失则使用全局UI参数
+
+            sp_speed = item.get("speed", global_speed)
+            sp_temperature = item.get("temperature", global_temperature)
+            name_to_fullname_and_note_dict[sp_name] = (item.get("full_name", ""), item.get("note", ""))
+
+            # 组装tuple：(name, lang_code, instruct, speed, temperature)
+            tpl = (
+                sp_name,
+                item["lang_code"],
+                item["instruct"],
+                sp_speed,
+                sp_temperature
+            )
+            result_list.append(tpl)
+        print(name_to_fullname_and_note_dict)
+
+        name_list_csv = ",".join(sp_name for sp_name,_,_,_,_ in result_list)
+        return (result_list, name_list_csv, str(name_to_fullname_and_note_dict))
+
+
+class SpeakerCastUnzip:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "speaker_item": ("SPEAKER_CAST_ITEM", {"tooltip": "ForEach输出的单条SPEAKER_CAST_ITEM元组"})
+            }
+        }
+
+    RETURN_TYPES = ("STRING", "STRING", "STRING", "FLOAT", "FLOAT")
+    RETURN_NAMES = ("name", "lang_code", "instruct", "speed", "temperature")
+    FUNCTION = "execute"
+    CATEGORY = "Qwen3‑TTS‑MLX/SpeakerCast"
+    DESCRIPTION = "解包单条SPEAKER_CAST_ITEM元组，输出独立端口对接VoiceDesign节点"
+
+    def execute(self, speaker_item):
+        name, lang_code, instruct, speed, temperature = speaker_item
+        return (name, lang_code, instruct, speed, temperature)
 
 
 # =========================
@@ -549,6 +647,8 @@ NODE_CLASS_MAPPINGS = {
     "SpeakerDef": SpeakerDef,
     "SpeakerListCombine": SpeakerListCombine,
     "Qwen3TTSBaseMLXDialogGenerate": Qwen3TTSBaseMLXDialogGenerate,
+    "SpeakerCastYamlParse": SpeakerCastYamlParse,
+    "SpeakerCastUnzip": SpeakerCastUnzip,
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
@@ -565,4 +665,8 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "SpeakerDef": "Speaker Def (Base‑TTS reference voice)",
     "SpeakerListCombine": "Speaker List Combine",
     "Qwen3TTSBaseMLXDialogGenerate": "Qwen3‑TTS Base MLX Dialog Generate (pd dict/list)",
+
+    # speaker cast design 
+    "SpeakerCastYamlParse": "Speaker‑Cast YAML Parse",
+    "SpeakerCastUnzip": "Speaker‑Cast Unzip",
 }
