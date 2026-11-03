@@ -604,10 +604,15 @@ class SpeakerCastYamlParse:
                 sp_temperature
             )
             result_list.append(tpl)
-        print(name_to_fullname_and_note_dict)
+        name_to_fullname_and_note_dict_str = yaml.dump(
+            {k: list(v) for k, v in name_to_fullname_and_note_dict.items()},
+            allow_unicode=True,
+            sort_keys=True,
+            indent=2,
+            default_flow_style=False)
 
         name_list_csv = ",".join(sp_name for sp_name,_,_,_,_ in result_list)
-        return (result_list, name_list_csv, str(name_to_fullname_and_note_dict))
+        return (result_list, name_list_csv, name_to_fullname_and_note_dict_str)
 
 
 class SpeakerCastUnzip:
