@@ -1,0 +1,527 @@
+quiz_meta:
+  title: 六下Unit1 How tall are you?课堂讨论TTS脚本
+  subject: 小学英语六年级下册
+  version: "tts‑discuss‑v1.0"
+groups:
+  - g: g0
+    gt: "课堂片段一：热身导入，聊聊身高体型"
+    a:
+      pd:
+        - txt: "Good morning, boys and girls."
+          sp: misswhite
+          gap: 0.6
+        - txt: "Today we learn Unit one, How tall are you?"
+          sp: misswhite
+          gap: 0.7
+        - txt: "We will talk about height and body size."
+          sp: misswhite
+          gap: 0.8
+        - txt: "Look around your classmates nearby."
+          sp: misswhite
+          gap: 0.8
+        - txt: "Some kids are tall, some kids are short."
+          sp: misswhite
+          gap: 0.7
+        - txt: "Zhang Peng is very tall in our class."
+          sp: chenjie
+          gap: 0.6
+        - txt: "Yes, I am taller than many friends."
+          sp: zhangpeng
+          gap: 0.6
+        - txt: "Zoom looks heavy and very strong."
+          sp: zip
+          gap: 0.6
+        - txt: "I eat much food so I get heavy."
+          sp: zoom
+          gap: 0.5
+        - txt: "We will learn words for these differences."
+          sp: misswhite
+          gap: 0.8
+  - g: g1
+    gt: "课堂片段二：基础比较级形容词 taller shorter longer"
+    a:
+      pd:
+        - txt: "Let’s start with our first group words."
+          sp: misswhite
+          gap: 0.7
+        - txt: "Taller means more high than others."
+          sp: misswhite
+          gap: 0.8
+        - txt: "My dad is taller than my mum."
+          sp: wubinbin
+          gap: 0.6
+        - txt: "Shorter can mean not tall or not long."
+          sp: misswhite
+          gap: 0.8
+        - txt: "I am shorter than my elder brother."
+          sp: amy
+          gap: 0.5
+        - txt: "Longer means having more length."
+          sp: misswhite
+          gap: 0.7
+        - txt: "My ruler is longer than your pencil."
+          sp: sarah
+          gap: 0.6
+        - txt: "Our classroom wall is longer than door."
+          sp: mike
+          gap: 0.6
+        - txt: "We add er for many comparison words."
+          sp: misswhite
+          gap: 0.8
+  - g: g2
+    gt: "课堂片段三：older younger bigger smaller 词汇操练"
+    a:
+      pd:
+        - txt: "Now we learn another set of adjectives."
+          sp: misswhite
+          gap: 0.7
+        - txt: "Older means more age than another one."
+          sp: misswhite
+          gap: 0.8
+        - txt: "My grandpa is older than my grandma."
+          sp: chenjie
+          gap: 0.6
+        - txt: "Younger means having less age."
+          sp: misswhite
+          gap: 0.8
+        - txt: "My little sister is younger than me."
+          sp: john
+          gap: 0.5
+        - txt: "Bigger means larger in size."
+          sp: misswhite
+          gap: 0.7
+        - txt: "This apple is bigger than that one."
+          sp: oliver
+          gap: 0.6
+        - txt: "Smaller means not so large in size."
+          sp: misswhite
+          gap: 0.8
+        - txt: "My bag is smaller than Zhang Peng’s."
+          sp: sarah
+          gap: 0.6
+        - txt: "Robin, share one more real‑life example."
+          sp: misswhite
+          gap: 0.7
+        - txt: "A cat is smaller than a big dog."
+          sp: robin
+          gap: 0.6
+  - g: g3
+    gt: "课堂片段四：thinner heavier stronger 双写与变y为i"
+    a:
+      pd:
+        - txt: "Some words have special change rules."
+          sp: misswhite
+          gap: 0.7
+        - txt: "Thinner means more slim than others."
+          sp: misswhite
+          gap: 0.8
+        - txt: "You must double n for the word thinner."
+          sp: misswhite
+          gap: 0.8
+        - txt: "I am thinner than my cousin boy."
+          sp: wubinbin
+          gap: 0.6
+        - txt: "Heavier means having more weight."
+          sp: misswhite
+          gap: 0.7
+        - txt: "We change y into i for heavier."
+          sp: misswhite
+          gap: 0.8
+        - txt: "This box is heavier than that box."
+          sp: zhangpeng
+          gap: 0.6
+        - txt: "Stronger means having more power."
+          sp: misswhite
+          gap: 0.7
+        - txt: "Sports men are stronger than common men."
+          sp: mike
+          gap: 0.6
+        - txt: "Zoom, are you stronger than Zip?"
+          sp: misswhite
+          gap: 0.7
+        - txt: "Yes, I am stronger than little Zip."
+          sp: zoom
+          gap: 0.5
+  - g: g4
+    gt: "课堂片段五：计量词汇 metre kilogram than both size wear"
+    a:
+      pd:
+        - txt: "Now we learn useful measurement words."
+          sp: misswhite
+          gap: 0.7
+        - txt: "Metre tells us how tall things are."
+          sp: misswhite
+          gap: 0.8
+        - txt: "I am one point six metres tall."
+          sp: chenjie
+          gap: 0.6
+        - txt: "Kilogram tells us how heavy we are."
+          sp: misswhite
+          gap: 0.8
+        - txt: "I am forty‑five kilograms this year."
+          sp: amy
+          gap: 0.5
+        - txt: "Than is used when we make comparison."
+          sp: misswhite
+          gap: 0.7
+        - txt: "Both means two persons or two things."
+          sp: misswhite
+          gap: 0.8
+        - txt: "Both of us like playing ball games."
+          sp: john
+          gap: 0.6
+        - txt: "Size talks about shoe or clothing number."
+          sp: misswhite
+          gap: 0.7
+        - txt: "Wear means you have shoes on feet."
+          sp: misswhite
+          gap: 0.8
+        - txt: "Robin, give us one more sentence."
+          sp: misswhite
+          gap: 0.7
+        - txt: "I wear size thirty‑six shoes now."
+          sp: robin
+          gap: 0.6
+  - g: g5
+    gt: "课堂片段六：核心句型 How tall are you? 问答操练"
+    a:
+      pd:
+        - txt: "Let’s practice our first key sentence."
+          sp: misswhite
+          gap: 0.7
+        - txt: "How tall are you? We ask for height."
+          sp: misswhite
+          gap: 0.6
+        - txt: "We answer with number plus metres."
+          sp: misswhite
+          gap: 0.8
+        - txt: "How tall are you, Wu Binbin?"
+          sp: misswhite
+          gap: 0.7
+        - txt: "I am one point five eight metres tall."
+          sp: wubinbin
+          gap: 0.6
+        - txt: "How tall is Zhang Peng?"
+          sp: misswhite
+          gap: 0.7
+        - txt: "He is one point six five metres tall."
+          sp: zhangpeng
+          gap: 0.6
+        - txt: "Who can make one more short dialogue?"
+          sp: misswhite
+          gap: 0.8
+        - txt: "How tall are you, Sarah?"
+          sp: chenjie
+          gap: 0.6
+        - txt: "I am one point five six metres tall."
+          sp: sarah
+          gap: 0.6
+  - g: g6
+    gt: "课堂片段七：句型 How heavy are you? 体重问答练习"
+    a:
+      pd:
+        - txt: "Next key question is for body weight."
+          sp: misswhite
+          gap: 0.7
+        - txt: "How heavy are you?"
+          sp: misswhite
+          gap: 0.6
+        - txt: "We answer with number plus kilograms."
+          sp: misswhite
+          gap: 0.8
+        - txt: "How heavy are you, Mike?"
+          sp: misswhite
+          gap: 0.7
+        - txt: "I am forty‑two kilograms."
+          sp: mike
+          gap: 0.6
+        - txt: "How heavy are you, Oliver?"
+          sp: misswhite
+          gap: 0.7
+        - txt: "I am forty‑four kilograms."
+          sp: oliver
+          gap: 0.6
+        - txt: "Who wants to try this pair of sentences?"
+          sp: misswhite
+          gap: 0.8
+        - txt: "How heavy are you, Amy?"
+          sp: john
+          gap: 0.6
+        - txt: "I am thirty‑nine kilograms."
+          sp: amy
+          gap: 0.6
+  - g: g7
+    gt: "课堂片段八：句型 What size are your shoes? 尺码操练"
+    a:
+      pd:
+        - txt: "Now we learn the shoe‑size question."
+          sp: misswhite
+          gap: 0.7
+        - txt: "What size are your shoes?"
+          sp: misswhite
+          gap: 0.6
+        - txt: "We answer with the shoe size number."
+          sp: misswhite
+          gap: 0.8
+        - txt: "What size are your shoes, Chen Jie?"
+          sp: misswhite
+          gap: 0.7
+        - txt: "My shoes are size thirty‑five."
+          sp: chenjie
+          gap: 0.6
+        - txt: "What size are your shoes, Zhang Peng?"
+          sp: misswhite
+          gap: 0.7
+        - txt: "My shoes are size thirty‑nine."
+          sp: zhangpeng
+          gap: 0.6
+        - txt: "Zip, you can ask Zoom this question."
+          sp: misswhite
+          gap: 0.7
+        - txt: "What size are your shoes, Zoom?"
+          sp: zip
+          gap: 0.6
+        - txt: "My shoes are very big, size forty."
+          sp: zoom
+          gap: 0.5
+  - g: g8
+    gt: "课堂片段九：语法 A is … than B 比较级基础结构"
+    a:
+      pd:
+        - txt: "Our core grammar is comparison with than."
+          sp: misswhite
+          gap: 0.7
+        - txt: "Structure: A plus be plus comparative plus than B."
+          sp: misswhite
+          gap: 0.8
+        - txt: "Zhang Peng is taller than Wu Binbin."
+          sp: misswhite
+          gap: 0.8
+        - txt: "This tree is taller than that small tree."
+          sp: wubinbin
+          gap: 0.6
+        - txt: "Chen Jie is younger than her mum."
+          sp: misswhite
+          gap: 0.7
+        - txt: "This bag is bigger than my pencil‑bag."
+          sp: sarah
+          gap: 0.6
+        - txt: "Who can give another daily‑life example?"
+          sp: misswhite
+          gap: 0.8
+        - txt: "I am thinner than my good friend John."
+          sp: amy
+          gap: 0.6
+        - txt: "Robin, show us one more comparison."
+          sp: misswhite
+          gap: 0.7
+        - txt: "The desk is longer than the small chair."
+          sp: robin
+          gap: 0.6
+  - g: g9
+    gt: "课堂片段十：形容词比较级变化规则梳理"
+    a:
+      pd:
+        - txt: "Let’s sort out change rules for comparatives."
+          sp: misswhite
+          gap: 0.7
+        - txt: "Most words just add er at the word end."
+          sp: misswhite
+          gap: 0.8
+        - txt: "Tall becomes taller, short becomes shorter."
+          sp: misswhite
+          gap: 0.8
+        - txt: "Some need double the last consonant."
+          sp: misswhite
+          gap: 0.7
+        - txt: "Big to bigger, thin to thinner."
+          sp: misswhite
+          gap: 0.8
+        - txt: "Words ending with y change y into i plus er."
+          sp: misswhite
+          gap: 0.8
+        - txt: "Heavy becomes heavier for example."
+          sp: misswhite
+          gap: 0.7
+        - txt: "My box is heavier than your small box."
+          sp: zhangpeng
+          gap: 0.6
+        - txt: "We must remember these three rules well."
+          sp: misswhite
+          gap: 0.8
+  - g: g10
+    gt: "课堂片段十一：拓展最高级 the …est 三者以上比较"
+    a:
+      pd:
+        - txt: "Now we learn the superlative form."
+          sp: misswhite
+          gap: 0.7
+        - txt: "Superlative talks about among three or more."
+          sp: misswhite
+          gap: 0.8
+        - txt: "We usually put the before superlative."
+          sp: misswhite
+          gap: 0.8
+        - txt: "Zhang Peng is the tallest in our class."
+          sp: misswhite
+          gap: 0.7
+        - txt: "This is the biggest apple on the table."
+          sp: chenjie
+          gap: 0.6
+        - txt: "Who is the youngest kid in your group?"
+          sp: misswhite
+          gap: 0.8
+        - txt: "Amy is the youngest in our small group."
+          sp: sarah
+          gap: 0.6
+        - txt: "Robin, share one superlative sentence."
+          sp: misswhite
+          gap: 0.7
+        - txt: "That is the longest ruler in our room."
+          sp: robin
+          gap: 0.6
+  - g: g11
+    gt: "课堂片段十二：情景角色扮演，同学之间比较对话"
+    a:
+      pd:
+        - txt: "Now let’s do short role‑play conversations."
+          sp: misswhite
+          gap: 0.7
+        - txt: "Scene one: Talk about height comparison."
+          sp: misswhite
+          gap: 0.8
+        - txt: "How tall are you?"
+          sp: wubinbin
+          gap: 0.6
+        - txt: "I am one point six two metres tall."
+          sp: zhangpeng
+          gap: 0.6
+        - txt: "You are taller than me."
+          sp: wubinbin
+          gap: 0.6
+        - txt: "Scene two: Talk about shoe size."
+          sp: misswhite
+          gap: 0.8
+        - txt: "What size are your shoes?"
+          sp: amy
+          gap: 0.6
+        - txt: "My shoes are size thirty‑eight."
+          sp: sarah
+          gap: 0.6
+        - txt: "Your feet are bigger than mine."
+          sp: amy
+          gap: 0.6
+        - txt: "Scene three: Talk about weight."
+          sp: misswhite
+          gap: 0.8
+        - txt: "How heavy are you?"
+          sp: mike
+          gap: 0.6
+        - txt: "I am forty‑six kilograms."
+          sp: oliver
+          gap: 0.6
+  - g: g12
+    gt: "课堂片段十三：Mr Young串场，比较级主题chant复习"
+    a:
+      pd:
+        - txt: "Excuse me, may I come into your class?"
+          sp: mryoung
+          gap: 0.7
+        - txt: "Welcome, Mr Young, please come in."
+          sp: misswhite
+          gap: 0.7
+        - txt: "I bring a short chant for comparatives."
+          sp: mryoung
+          gap: 0.8
+        - txt: "Taller, taller, more high."
+          sp: mryoung
+          gap: 0.7
+        - txt: "Shorter, shorter, not so high."
+          sp: mryoung
+          gap: 0.7
+        - txt: "Bigger, bigger, large and bright."
+          sp: mryoung
+          gap: 0.7
+        - txt: "Compare things day and night."
+          sp: mryoung
+          gap: 0.8
+        - txt: "This chant helps us remember word rules."
+          sp: misswhite
+          gap: 0.7
+        - txt: "Thank you for your fun little chant."
+          sp: misswhite
+          gap: 0.7
+        - txt: "You are welcome, enjoy your study."
+          sp: mryoung
+          gap: 0.6
+  - g: g13
+    gt: "课堂片段十四：单元知识要点整体回顾"
+    a:
+      pd:
+        - txt: "Let’s review all we learned in this lesson."
+          sp: misswhite
+          gap: 0.7
+        - txt: "We learned many comparative adjectives."
+          sp: misswhite
+          gap: 0.8
+        - txt: "Such as taller, older, bigger, heavier."
+          sp: misswhite
+          gap: 0.7
+        - txt: "We know metre, kilogram, size and wear."
+          sp: misswhite
+          gap: 0.8
+        - txt: "Key sentences: How tall are you?"
+          sp: misswhite
+          gap: 0.7
+        - txt: "How heavy are you and What size are your shoes?"
+          sp: misswhite
+          gap: 0.8
+        - txt: "Grammar: A plus be plus comparative plus than B."
+          sp: misswhite
+          gap: 0.8
+        - txt: "We learned three comparative change rules."
+          sp: misswhite
+          gap: 0.7
+        - txt: "We also know the …est superlative form."
+          sp: misswhite
+          gap: 0.8
+        - txt: "We compare people and things in daily life."
+          sp: misswhite
+          gap: 0.8
+  - g: g14
+    gt: "课堂片段十五：布置课后任务，课堂结束"
+    a:
+      pd:
+        - txt: "Now for your after‑class small task."
+          sp: misswhite
+          gap: 0.7
+        - txt: "Please write two comparison sentences at home."
+          sp: misswhite
+          gap: 0.8
+        - txt: "Use than in each of your two sentences."
+          sp: misswhite
+          gap: 0.8
+        - txt: "You can compare your family members."
+          sp: misswhite
+          gap: 0.7
+        - txt: "Share your sentences with your parents."
+          sp: misswhite
+          gap: 0.8
+        - txt: "Any questions before we finish class?"
+          sp: misswhite
+          gap: 0.7
+        - txt: "I will compare my brother and me."
+          sp: wubinbin
+          gap: 0.6
+        - txt: "I want to compare my two toy boxes."
+          sp: chenjie
+          gap: 0.6
+        - txt: "Very good thinking, class is over."
+          sp: misswhite
+          gap: 0.8
+        - txt: "Goodbye, Miss White."
+          sp: chenjie
+          gap: 0.5
+        - txt: "Goodbye, Miss White."
+          sp: zhangpeng
+          gap: 0.5

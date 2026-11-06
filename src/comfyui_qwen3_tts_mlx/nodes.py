@@ -2,6 +2,7 @@ import os
 import wave
 import yaml
 import numpy as np
+from . import dialog_render
 from pathlib import Path
 from inspect import cleandoc
 from mlx_audio.tts.generate import generate_audio
@@ -636,6 +637,57 @@ class SpeakerCastUnzip:
         name, lang_code, instruct, speed, temperature, avatar = speaker_item
         return (name, lang_code, instruct, speed, temperature, avatar)
 
+class Qwen3TTSBaseMLXDialogueRenderGenerate:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "yaml_file_path": ("STRING", {"default": "/path/to/dialog.yaml", "tooltip": "对话YAML文件路径，产物生成到此文件的同级目录"}),
+                "cast_dir": ("STRING", {"default": "/path/to/cast_dir", "tooltip": "演员表cast目录"}),
+                "audio_dir": ("STRING", {"default": "tts_output", "tooltip": "音频wav所在目录"}),
+            },
+            "optional": {
+                "template_dir": ("STRING", {"default": "", "tooltip": "模板目录；留空则使用nodes.py同级目录寻找g2模板"}),
+                "trigger": ("*", {"default": None, "tooltip":"仅DAG串行时序触发，不参与渲染逻辑"}),
+            }
+        }
+    RETURN_TYPES = ("STRING", "STRING")
+    RETURN_NAMES = ("html_abs_path", "pdf_abs_path")
+    FUNCTION = "render_node"
+    CATEGORY = "Qwen3‑TTS‑MLX/Dialog"
+    OUTPUT_NODE = True
+
+    async def render_node(self, yaml_file_path, cast_dir, audio_dir, template_dir="", trigger=None):
+        from pathlib import Path
+        yaml_p = Path(yaml_file_path)
+        cast_p = Path(cast_dir)
+        audio_p = Path(audio_dir)
+
+        if not yaml_p.is_file():
+            raise FileNotFoundError(f"yaml_file_path not found: {yaml_p}")
+        if not cast_p.is_dir():
+            raise FileNotFoundError(f"cast_dir is not a valid directory: {cast_p}")
+        if not audio_p.is_dir():
+            raise FileNotFoundError(f"audio_dir is not a valid directory: {audio_p}")
+
+        if template_dir.strip():
+            tmpl_p = Path(template_dir)
+        else:
+            tmpl_p = Path(__file__).parent
+
+        if not tmpl_p.is_dir():
+            raise FileNotFoundError(f"template_dir directory not found: {tmpl_p}")
+
+        output_base_dir = yaml_p.parent
+        html_out, pdf_out = await dialog_render.render_dialogue_async(
+            yaml_path=yaml_p,
+            cast_dir=cast_p,
+            audio_dir=audio_p,
+            template_dir=tmpl_p,
+            output_base_dir=output_base_dir
+        )
+        return (str(html_out.absolute()), str(pdf_out.absolute()))
+
 
 # =========================
 # 🔹 注册
@@ -654,8 +706,13 @@ NODE_CLASS_MAPPINGS = {
     "SpeakerDef": SpeakerDef,
     "SpeakerListCombine": SpeakerListCombine,
     "Qwen3TTSBaseMLXDialogGenerate": Qwen3TTSBaseMLXDialogGenerate,
+
+    # speaker cast design 
     "SpeakerCastYamlParse": SpeakerCastYamlParse,
     "SpeakerCastUnzip": SpeakerCastUnzip,
+
+    # dialog render
+    "Qwen3TTSBaseMLXDialogueRenderGenerate": Qwen3TTSBaseMLXDialogueRenderGenerate,
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
@@ -676,4 +733,7 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     # speaker cast design 
     "SpeakerCastYamlParse": "Speaker‑Cast YAML Parse",
     "SpeakerCastUnzip": "Speaker‑Cast Unzip",
+
+    # dialog render
+    "Qwen3TTSBaseMLXDialogueRenderGenerate": "Qwen3‑TTS Base MLX Dialogue Render (HTML/PDF/PNG)",
 }
