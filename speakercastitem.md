@@ -13,6 +13,7 @@
 | `full_name` | string | ⭕可选 | 人物完整正式名称，仅用于展示、备注，**不作为程序key，允许重复，允许为空**。例：`Amy Green` |
 | `lang_code` | string | ✅ 必填 | 小写自然语言单词，直接透传给TTS底层`lang_code`参数。示例：`chinese` / `english` / `japanese` |
 | `instruct` | string | ✅ 必填 | **VoiceDesign音色创作指令**，直接传入节点`instruct`入参；描述年龄、性别、声线、情绪、说话习惯，用于从零生成全新音色，不是微调已有音色。 需要用中文书写音色描述|
+| `avatar` | string | ⭕可选 | **头像绘图正向提示词，仅用于AI绘画，不参与语音生成**。描述人物外貌、服饰、画风、构图；建议固定构图：**头像半身肖像，脸部居中**；可写风格、发色、瞳色、衣着、表情、美术画风；为空时代表不生成头像。 |
 | `note` | string | ⭕可选 | 人类阅读备注，角色背景、使用场景；**不传入TTS，程序完全忽略此字段**。 |
 | `speed` | float | ⭕可选 | 【预留扩展】该角色独立语速，0.5‑2.0；如不填则使用TTS全局speed参数 |
 | `temperature` | float | ⭕可选 | 【预留扩展】该角色独立生成温度，0.1‑1.0；如不填使用全局temperature |
@@ -51,6 +52,25 @@
 ### 长度提示
 本地mlx版本没有云端500字符硬限制，但仍然建议控制在 **150字以内**，避免指令过长带来的不稳定。
 
+#### avatar 编写原则
+1. 构图优先固定：**半身头像肖像，面部居中，特写头像**，方便批量生成角色头像；
+2. 和角色人设保持统一：年龄、性别、气质要和上方`instruct`语音人设保持一致；
+3. 可以包含：外貌特征、发型发色、眼睛、服装、表情、
+4. 不要包含美术画风（二次元/写实/卡通）、光影相关的提示词，所有人物统一设置；
+5. 不要放负向提示；负向提示统一在绘图工作流全局配置，本字段只写正向；
+6. 简洁，控制在200字符以内；
+7. 可选；留空即跳过该角色头像生成。
+
+✅ good示例：
+> 半身头像，10岁中国小女孩，黑色齐肩短发，圆圆的眼睛，温和腼腆微笑，校园校服，面部居中特写
+
+❌ bad示例（过于宽泛）：
+> 一个好看女孩，很漂亮。
+
+❌ bad示例（对于光影或美术风格的设定）：
+> 二次元卡通画风，柔和自然光
+> Q版卡通，柔和室内光
+
 
 
 ## YAML 完整示例（以PEP人教版六年级英语教材为例)
@@ -62,72 +82,14 @@
   full_name: Chen Jie
   lang_code: chinese
   instruct: 儿童，女性，中等音调，音色温润柔和，语速略偏慢，气质礼貌稳重，适合小学英语课本对话朗读。
+  avatar: 半身头像，10岁中国小女孩，黑色齐肩短发，圆圆的眼睛，温和腼腆微笑，蓝白校园校服，面部居中特写
   note: 中国女生，乐于助人，大方善交流
 - name: wubinbin
   full_name: Wu Binbin
   lang_code: chinese
   instruct: 儿童，男性，中等音调，音色温润干净，语速平稳，说话内敛沉静，适合小学课本朗读。
+  avatar: 半身头像，11岁中国小男孩，利落黑色短发，清澈眼神，安静内敛表情，校服, 脸部居中特写
   note: 中国男生，聪明勤奋有礼貌，爱思考记录
-- name: zhangpeng
-  full_name: Zhang Peng
-  lang_code: chinese
-  instruct: 儿童，男性，中等音调，音色饱满厚实，语速稍快，语气热忱外放，充满朝气，适合课堂对话。
-  note: 中国男生，高大外向热心，热爱运动
-- name: sarah
-  full_name: Sarah Miller
-  lang_code: english
-  instruct: 儿童，女性，中等音调，音色醇厚温暖，语速略慢，心思细腻待人友善，适合小学生课本对话朗读。
-  note: 外国女生，善于观察，乐于体会文化差异
-- name: amy
-  full_name: Amy Green
-  lang_code: english
-  instruct: 儿童，女性，中等音调，音色柔和克制，语速适中，性格安静内敛，腼腆踏实的小学生。
-  note: 外国女生，文静踏实，略带腼腆
-- name: mike
-  full_name: Mike Black
-  lang_code: english
-  instruct: 儿童，男性，中等音调，音色醇厚清亮，语速稍快，好奇心强，性格随和的小学生。
-  note: 外国男孩，好奇心旺盛，喜爱户外活动
-- name: john
-  full_name: John Baker
-  lang_code: english
-  instruct: 儿童，男性，中等音调，音色松弛醇厚，语速平稳适中，性格随和豁达的小学生。
-  note: 外国男孩，性格随和包容
-- name: oliver
-  full_name: Oliver Smith
-  lang_code: english
-  instruct: 儿童，男性，中等音调，音色清亮温暖，语速适中轻快，热爱运动性格开朗的小学生。
-  note: 澳大利亚男孩，热爱运动，性格开朗
-- name: misswhite
-  full_name: Miss White
-  lang_code: english
-  instruct: 青年，女性，中等音调，音色醇厚温柔，语速偏慢适中，语气耐心，带有鼓励感的教师声线。
-  note: 英语老师，和蔼有耐心，善于鼓励学生
-- name: mrjones
-  full_name: Mr Jones
-  lang_code: english
-  instruct: 青年，男性，中等音调，音色明亮松弛，语速适中，风趣随和的美术教师声线。
-  note: 美术老师，年轻风趣
-- name: mryoung
-  full_name: Mr Young
-  lang_code: english
-  instruct: 中年，男性，中等音调，音色浑厚温和，语速略慢，诙谐和善的音乐教师声线。
-  note: 音乐老师，年长幽默
-- name: robin
-  full_name: Robin
-  lang_code: english
-  instruct: 儿童，中性，中等音调，音色顺滑带有轻微金属温润感，语速均匀平稳，语气认真诚恳的机器人。
-  note: 智能机器人，能干严谨，会双语，怕水
-- name: zip
-  full_name: Zip
-  lang_code: english
-  instruct: 儿童，女性，中等音调，音色清脆灵动，语速偏快，机敏狡黠的卡通松鼠角色。
-  note: 松鼠，机灵反应快，善于出主意
-- name: zoom
-  full_name: Zoom
-  lang_code: english
-  instruct: 儿童，男性，中等音调，音色厚实绵软，语速略慢，憨厚天真的卡通大熊角色。
-  note: 大熊，憨厚贪吃，有点粗心，喜剧角色
 ```
 
 
@@ -143,4 +105,7 @@
    - lang_code为chinese用中文写instruct；lang_code为english用英文写instruct；
 5. 只输出YAML正文，不要markdown代码块标记以外多余解释文字；
 6. name / lang_code / instruct为必填；full_name、note、speed、temperature为可选。
+5. avatar为头像绘图正向提示词【可选】，仅用于AI绘画，不参与语音生成；
+   - 构图优先：半身头像肖像，面部居中特写；人设必须和instruct年龄性格匹配；
+   - 只写正向提示，不要写负向词；不填则省略此字段。
 ```

@@ -593,6 +593,7 @@ class SpeakerCastYamlParse:
 
             sp_speed = item.get("speed", global_speed)
             sp_temperature = item.get("temperature", global_temperature)
+            sp_avatar = item.get("avatar", "")
             name_to_fullname_and_note_dict[sp_name] = (item.get("full_name", ""), item.get("note", ""))
 
             # 组装tuple：(name, lang_code, instruct, speed, temperature)
@@ -601,7 +602,8 @@ class SpeakerCastYamlParse:
                 item["lang_code"],
                 item["instruct"],
                 sp_speed,
-                sp_temperature
+                sp_temperature,
+                sp_avatar
             )
             result_list.append(tpl)
         name_to_fullname_and_note_dict_str = yaml.dump(
@@ -611,7 +613,7 @@ class SpeakerCastYamlParse:
             indent=2,
             default_flow_style=False)
 
-        name_list_csv = ",".join(sp_name for sp_name,_,_,_,_ in result_list)
+        name_list_csv = ",".join(sp_name for sp_name,_,_,_,_,_ in result_list)
         return (result_list, name_list_csv, name_to_fullname_and_note_dict_str)
 
 
@@ -624,15 +626,15 @@ class SpeakerCastUnzip:
             }
         }
 
-    RETURN_TYPES = ("STRING", "STRING", "STRING", "FLOAT", "FLOAT")
-    RETURN_NAMES = ("name", "lang_code", "instruct", "speed", "temperature")
+    RETURN_TYPES = ("STRING", "STRING", "STRING", "FLOAT", "FLOAT", "STRING")
+    RETURN_NAMES = ("name", "lang_code", "instruct", "speed", "temperature", "avatar")
     FUNCTION = "execute"
     CATEGORY = "Qwen3‑TTS‑MLX/SpeakerCast"
-    DESCRIPTION = "解包单条SPEAKER_CAST_ITEM元组，输出独立端口对接VoiceDesign节点"
+    DESCRIPTION = "解包单条SPEAKER_CAST_ITEM元组，输出独立端口对接VoiceDesign节点；avatar输出头像绘图正向提示词"
 
     def execute(self, speaker_item):
-        name, lang_code, instruct, speed, temperature = speaker_item
-        return (name, lang_code, instruct, speed, temperature)
+        name, lang_code, instruct, speed, temperature, avatar = speaker_item
+        return (name, lang_code, instruct, speed, temperature, avatar)
 
 
 # =========================
