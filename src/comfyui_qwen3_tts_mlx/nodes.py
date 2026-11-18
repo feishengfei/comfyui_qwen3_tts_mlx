@@ -1,4 +1,5 @@
 import os
+import gc
 import wave
 import yaml
 import numpy as np
@@ -60,6 +61,46 @@ OPTION_SETTINGS = {
     # 新增trigger：仅用于DAG执行依赖，业务逻辑不消费此参数
     "trigger": ("*", {"default": None, "tooltip":"仅做执行依赖接线，不参与生成逻辑，接上游节点输出实现串行排队"}),
 }
+
+class Qwen3TTSMLXModelUnloader:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "model_dir": ("STRING", {
+                    "default": "/path/to/your/qwen3tts-folder",
+                    "tooltip":"需要卸载的TTS模型目录，必须与Qwen3 TTS MLX Loader填写路径完全一致"
+                }),
+                "trigger": ("*", {
+                    "tooltip":"时序触发器；必须放在所有使用该模型的TTS节点之后执行，收到信号才执行卸载"
+                })
+            }
+        }
+    RETURN_TYPES = ("*", "STRING")
+    RETURN_NAMES = ("signal_out", "msg")
+    FUNCTION = "unload_model_node"
+    CATEGORY = "Qwen3-TTS-MLX"
+    OUTPUT_NODE = False
+
+    def unload_model_node(self, model_dir, trigger):
+        if not hasattr(Qwen3TTSMLXLoader, "_model_cache"):
+            msg = "⚠️Qwen3TTSMLXLoader 不存在 _model_cache 缓存属性，跳过卸载"
+            print(f"[Qwen3TTSMLXModelUnloader] {msg}")
+            return (trigger, msg)
+        cache = Qwen3TTSMLXLoader._model_cache
+        msg = ""
+        model_dir_stripped = model_dir.strip()
+        if model_dir_stripped in cache:
+            model_obj = cache.pop(model_dir_stripped)
+            del model_obj
+            gc.collect()
+            msg = f"✅TTS模型缓存已移除：{model_dir_stripped}"
+            print(f"[Qwen3TTSMLXModelUnloader] {msg}")
+        else:
+            msg = f"ℹ️缓存内未找到TTS模型：{model_dir_stripped}，无需卸载"
+            print(f"[Qwen3TTSMLXModelUnloader] {msg}")
+        # 透传trigger信号，供后续链路
+        return (trigger, msg)
 
 # =========================
 # 🔹 TTS Base 生成节点
@@ -694,6 +735,7 @@ class Qwen3TTSBaseMLXDialogueRenderGenerate:
 # =========================
 NODE_CLASS_MAPPINGS = {
     "Qwen3TTSMLXLoader": Qwen3TTSMLXLoader,
+    "Qwen3TTSMLXModelUnloader": Qwen3TTSMLXModelUnloader,
     "Qwen3TTSBaseMLXGenerate": Qwen3TTSBaseMLXGenerate,
     "Qwen3TTSCustomVoiceMLXGenerate": Qwen3TTSCustomVoiceMLXGenerate,
     "Qwen3TTSVoiceDesignMLXGenerate": Qwen3TTSVoiceDesignMLXGenerate,
@@ -717,6 +759,7 @@ NODE_CLASS_MAPPINGS = {
 
 NODE_DISPLAY_NAME_MAPPINGS = {
     "Qwen3TTSMLXLoader": "Qwen3 TTS MLX Loader",
+    "Qwen3TTSMLXModelUnloader": "Qwen3 TTS MLX Model Unloader",
     "Qwen3TTSBaseMLXGenerate": "Qwen3 TTS MLX Generate Base",
     "Qwen3TTSCustomVoiceMLXGenerate": "Qwen3 TTS MLX Generate CustomVoice (9 speakers)",
     "Qwen3TTSVoiceDesignMLXGenerate": "Qwen3 TTS MLX Generate VoiceDesign (by instruct)",
